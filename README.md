@@ -1,17 +1,41 @@
 # character-predictor
-A simple implementation for word completion based on next character pridection, where for character prediction a recurrent neural network is used. The recurrent network can be vanilla rnn or GRU rnn depend on given argument to program. 
+A python api for predicting the next word based on present text given. The character-predictor uses recurrent neural network(RNN) as prediction model for predicting the next character based on previous text.
 
-Usage: python main.py [options]
 
-    python main.py  or
+## Requirements
 
-    python main.py -rnn gru/vrnn -text text_file_name -npredict number_of_pridection
+Its a python implementaion compatible with both 2 and 3.
 
-    [options]::
+Requirements:
 
-      -rnn vrnn/gru :: define type recurrent model use training (by default 'gru')"
+    sklearn <= 0.0
+    numpy <= 1.15.0
+    Theano <= 1.0.3
 
-      -text file name :: input file name use for trainning model for character prediction
+For adding to your project:
+ Download the implementation to your project folder
+ Add the lines to your file
 
-      -npredict number of pridection :: given npredict number of words predicted
-    
+    > from char_pridect import PredictWord
+    > pword = PredictWord(model_file="model_file.save")
+
+ Use **pword** for predicting word e.g.
+
+    > text = "the partner of experi"
+    > pword = pword.predict(inp)
+    > pword
+    ['experience ', 'experime ', 'experiencly ', 'experiend ', 'experiming ']
+
+
+
+For training RNN model for character prediction based on specific text corpus or text dataset.
+
+    if __name__ == '__main__':
+        fname = 'pg.txt'
+        cmodel = CharPredictNNModel(seq_len=32, hidden_lay_sz=(128,), model_file='model_file.save')
+        cmodel.compile()
+        cmodel.train(fname)
+
+        # testing
+        correct, total = cmodel.test(fname)
+        sys.stdout.write("accuracy :", float(correct)/total)
