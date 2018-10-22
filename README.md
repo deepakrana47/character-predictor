@@ -38,4 +38,5 @@ For training character-prediction RNN model to specific text corpus or data.
 
         # testing
         correct, total = cmodel.test(fname)
+
         sys.stdout.write("accuracy :", float(correct)/total)
