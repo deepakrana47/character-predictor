@@ -4,7 +4,7 @@ theano.config.exception_verbosity='high'
 
 from sklearn.utils import shuffle
 import numpy as np
-import sys, datetime, pickle, os, re
+import sys, pickle, re
 
 from Recurrent_Unit import GRU
 from Optimization import Adam, rmsprop
@@ -147,12 +147,13 @@ class RNN_Model:
     #     return
 
 class CharPredictNNModel:
-    def __init__(self, seq_len=25, hidden_lay_sz=(128,)):
+    def __init__(self, seq_len=25, hidden_lay_sz=(64,), model_file='model_file.save'):
         self.chars = ' !?`-,.:;"\'?<>{}[]+_()&%$@^#*0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
         self.i2c_map = {i + 1: self.chars[i] for i in range(len(self.chars))}
         self.c2i_map = {v: k for k, v in self.i2c_map.items()}
         self.i2c_map[0], self.c2i_map[''] = '', 0
         self.D = len(self.i2c_map)
+        self.model_file = model_file
 
         self.map_vect = {}
         for i in self.c2i_map:
@@ -187,7 +188,7 @@ class CharPredictNNModel:
         text = open(fname, 'r').read()
         X, Y = self.sample_formation(text)
         self.model.fit(X, Y)
-        self.save('model_file.save')
+        self.save(self.model_file)
 
     def save(self, filename):
         params = (self.seq_length, self.hidden_lay_sz, self.model.__getstate__())
@@ -223,10 +224,10 @@ class CharPredictNNModel:
 
 if __name__ == '__main__':
     fname = 'pg.txt'
-    cmodel = CharPredictNNModel(seq_len=32, hidden_lay_sz=(128,))
+    cmodel = CharPredictNNModel(seq_len=32, hidden_lay_sz=(128,), model_file='model_file.save')
     cmodel.compile()
     cmodel.train(fname)
 
     # testing
     correct, total = cmodel.test(fname)
-    print("accuracy :", float(correct)/total)
+    sys.stdout.write("accuracy :", float(correct)/total)

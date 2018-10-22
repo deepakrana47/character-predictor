@@ -3,9 +3,9 @@ from Model import CharPredictNNModel
 
 class PredictWord:
 
-    def __init__(self, n_top=5):
+    def __init__(self, n_top=5, model_file="model_file.save"):
         self.cmodel = CharPredictNNModel()
-        self.cmodel.load("model_file.save")
+        self.cmodel.load(model_file)
         self.n = n_top
 
     def predict_chars(self, text):
